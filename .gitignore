@@ -2,3 +2,7 @@
 */obj/*
 */bin/*
 packages/*
+*/node_modules/*
+*/wwwroot/appScripts/*
+*/wwwroot/libs/*
+*/wwwroot/dl/*

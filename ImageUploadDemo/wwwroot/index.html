@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Image Upload Demo</title>
+    <!-- 1. Load libraries -->
+    <link rel="stylesheet" href="libs/bootstrap.css" />
+    <link rel="stylesheet" href="libs/jquery.fileupload.css" />
+    <link rel="stylesheet" href="libs/jquery.fileupload-ui.css" />
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+    <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+    <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+    <script src="libs/jquery.iframe-transport.js"></script>
+    <script src="libs/jquery.fileupload.js"></script>
+    <script src="libs/jquery.fileupload-process.js"></script>
+    <script src="libs/jquery.fileupload-image.js"></script>
+    <script src="libs/jquery.fileupload-validate.js"></script>
+
+    <script src="libs/angular2-polyfills.js"></script>
+    <script src="libs/system.js"></script>
+    <script src="libs/rx.js"></script>
+    <script src="libs/angular2.js"></script>
+    <script src="libs/es6-shim.js"></script>
+    <script src="libs/bootstrap.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script>
+        // <![CDATA[
+        System.config({
+            packages: { appScripts: { defaultExtension: 'js' } }
+        });
+        System.import('appScripts/boot').then(null, console.error.bind(console));
+        // ]]>
+    </script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #333;
+        }
+
+        body {
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,.5);
+        }
+
+        /* Custom default button */
+        .btn-default,
+        .btn-default:hover,
+        .btn-default:focus {
+            color: #333;
+            text-shadow: none; /* Prevent inheritence from `body` */
+            background-color: #fff;
+            border: 1px solid #fff;
+        }
+
+        /* Extra markup and styles for table-esque vertical and horizontal centering */
+        .site-wrapper {
+            display: table;
+            width: 100%;
+            height: 100%; /* For at least Firefox */
+            min-height: 100%;
+            -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+            box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+        }
+
+        .site-wrapper-inner {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        .cover-container {
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        /* Padding for spacing */
+        .inner {
+            padding: 30px;
+        }
+
+        /* Header */
+        .masthead-brand {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .masthead-brand {
+                float: left;
+            }
+
+            .masthead-nav {
+                float: right;
+            }
+        }
+
+        /* Cover */
+        .cover {
+            padding: 0 20px;
+        }
+
+            .cover .btn-lg {
+                padding: 10px 20px;
+                font-weight: bold;
+            }
+
+        .upload-btn {
+            height: 49px;
+        }
+
+        /* Footer */
+        .mastfoot {
+            color: #999; /* IE8 proofing */
+            color: rgba(255,255,255,.5);
+        }
+
+
+        /* Affix and center */
+        @media (min-width: 768px) {
+            /* Pull out the header and footer */
+            .masthead {
+                position: fixed;
+                top: 0;
+            }
+
+            .mastfoot {
+                position: fixed;
+                bottom: 0;
+            }
+            /* Start the vertical centering */
+            .site-wrapper-inner {
+                vertical-align: middle;
+            }
+            /* Handle the widths */
+            .masthead,
+            .mastfoot,
+            .cover-container {
+                width: 100%; /* Must be percentage or pixels for horizontal alignment */
+            }
+        }
+
+        @media (min-width: 992px) {
+            .masthead,
+            .mastfoot,
+            .cover-container {
+                width: 700px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <my-app>Loading...</my-app>
+</body>
+</html>
