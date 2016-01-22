@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageUploadDemo.ImageProcessProvider;
 using ImageUploadDemo.models;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
@@ -15,11 +16,12 @@ namespace ImageUploadDemo.controllers
     [Route("api/[controller]")]
     public class UploadController : Controller
     {
-        IOptions<AppSettings> appSettings;
-
+        private IOptions<AppSettings> appSettings;
+        private IProvider imageProvider;
         public UploadController(IOptions<AppSettings> appSettings)
         {
             this.appSettings = appSettings;
+            this.imageProvider = new AzureBlobProvider(appSettings);
         }
 
         [HttpGet]
@@ -43,11 +45,26 @@ namespace ImageUploadDemo.controllers
             FileInfo fi = new FileInfo(actualFileName);
             string fileName = string.Format(CultureInfo.InvariantCulture, "{0}{1}", Guid.NewGuid().ToString("N").Substring(0, 8), fi.Extension);
             string filePath = Path.Combine(wwwroot, "dl", fileName);
-            await file.SaveAsAsync(filePath);
+
+            ResizeResult result = null;
+            try
+            {
+                using (Stream stream = file.OpenReadStream())
+                {
+                    result = await this.imageProvider.Resize(fileName, stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+
+            //await file.SaveAsAsync(filePath);
 
             return new ObjectResult(new
             {
-                url = string.Format(CultureInfo.InvariantCulture, "{0}://{1}/dl/{2}", Request.Scheme, Request.Host.Value, fileName)
+                url = result.UriResizedSize
             });
         }
     }

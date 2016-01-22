@@ -14,7 +14,8 @@
     "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc.WebApiCompatShim": "6.0.0-rc1-final"
+    "Microsoft.AspNet.Mvc.WebApiCompatShim": "6.0.0-rc1-final",
+    "WindowsAzure.Storage": "6.2.2-preview"
   },
 
   "commands": {
@@ -22,8 +23,14 @@
   },
 
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": { }
+    "dnx451": {
+      "dependencies": {
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+      }
+    }
   },
 
   "exclude": [
