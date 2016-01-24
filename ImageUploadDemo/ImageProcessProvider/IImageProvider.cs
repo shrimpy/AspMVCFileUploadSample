@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ImageUploadDemo.ImageProcessProvider
 {
-    public interface IProvider
+    public interface IImageProvider
     {
         /// <param name="fileName">File Name</param>
         /// <param name="stream">File content</param>

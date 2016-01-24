@@ -7,19 +7,29 @@
                 </div>
             </div>
 
-            <div class="inner cover">
+            <div class="inner cover" style="margin-top:100px;">
+                <div class="alert alert-success" [hidden]="displayError || !message">
+                    {{message}}
+                </div>
+                <div class="alert alert-danger" [hidden]="!displayError || !message">
+                    {{message}}
+                </div>
+                <br />
                 <span class="btn btn-success fileinput-button btn-lg">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span id="uploader-label">Choose a photo to upload ...</span>
+                    <span id="uploader-label">Choose a photo (jpg/png) to upload ...</span>
                     <input id="fileupload" type="file" name="photo" />
                 </span>
+                <br />
+                <br />
+                <img src="{{imgSrc}}" style="max-height:700px; max-width:500px;" />
             </div>
 
-            <div class="mastfoot">
+            <!--<div class="mastfoot" style="margin-top:100px;">
                 <div class="inner">
                     <p>Copyright &copy; by <a href="https://github.com/shrimpy" target="_blank">shrimpy</a></p>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

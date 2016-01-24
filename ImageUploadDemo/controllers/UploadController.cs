@@ -5,10 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ImageUploadDemo.ImageProcessProvider;
-using ImageUploadDemo.models;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace ImageUploadDemo.controllers
@@ -16,12 +15,12 @@ namespace ImageUploadDemo.controllers
     [Route("api/[controller]")]
     public class UploadController : Controller
     {
-        private IOptions<AppSettings> appSettings;
-        private IProvider imageProvider;
-        public UploadController(IOptions<AppSettings> appSettings)
+        private IImageProvider imageProvider;
+        private ILoggerFactory loggerFactory;
+        public UploadController(IImageProvider imageProvider, ILoggerFactory loggerFactory)
         {
-            this.appSettings = appSettings;
-            this.imageProvider = new AzureBlobProvider(appSettings);
+            this.imageProvider = imageProvider;
+            this.loggerFactory = loggerFactory;
         }
 
         [HttpGet]
@@ -36,17 +35,21 @@ namespace ImageUploadDemo.controllers
             if (Request.Form.Files.Count != 1)
                 throw new InvalidOperationException("Invalid upload!");
 
-            string wwwroot = Environment.GetEnvironmentVariable("SITE_WWWROOT");
-            if (string.IsNullOrWhiteSpace(wwwroot))
-                wwwroot = this.appSettings.Value.wwwroot;
-
             IFormFile file = Request.Form.Files.First();
+            if (!(string.Equals("image/jpeg", file.ContentType, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals("image/jpg", file.ContentType, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals("image/png", file.ContentType, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new InvalidOperationException("Invalid content type. Only support JPG and PNG images.");
+            }
+
             string actualFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            Console.WriteLine(file.ContentType);
             FileInfo fi = new FileInfo(actualFileName);
             string fileName = string.Format(CultureInfo.InvariantCulture, "{0}{1}", Guid.NewGuid().ToString("N").Substring(0, 8), fi.Extension);
-            string filePath = Path.Combine(wwwroot, "dl", fileName);
 
             ResizeResult result = null;
+
             try
             {
                 using (Stream stream = file.OpenReadStream())
@@ -56,14 +59,13 @@ namespace ImageUploadDemo.controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                this.loggerFactory.CreateLogger("Default").LogError("", ex);
                 throw;
             }
 
-            //await file.SaveAsAsync(filePath);
-
             return new ObjectResult(new
             {
+                originUrl = result.UriActualSize,
                 url = result.UriResizedSize
             });
         }

@@ -9,14 +9,15 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ImageUploadDemo.ImageProcessProvider
 {
-    public class AzureBlobProvider : IProvider
+    public class AzureBlobProvider : IImageProvider
     {
-        private const string CloudName = "DEFAULT_CLOUD";
-        IOptions<AppSettings> appSettings;
+        private IOptions<AppSettings> appSettings;
+        private IResizer resizer;
 
-        public AzureBlobProvider(IOptions<AppSettings> appSettings)
+        public AzureBlobProvider(IOptions<AppSettings> appSettings, IResizer resizer)
         {
             this.appSettings = appSettings;
+            this.resizer = resizer;
         }
 
         public object Acount { get; private set; }
@@ -34,10 +35,11 @@ namespace ImageUploadDemo.ImageProcessProvider
             });
             CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
             await blob.UploadFromStreamAsync(stream);
+
             return new ResizeResult()
             {
                 UriActualSize = blob.Uri.AbsoluteUri,
-                UriResizedSize = blob.Uri.AbsoluteUri
+                UriResizedSize = await this.resizer.Resize(blob.Uri.AbsoluteUri, Constants.MaxHeight, Constants.MaxWide)
             };
         }
     }

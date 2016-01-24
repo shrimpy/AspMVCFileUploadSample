@@ -1,4 +1,6 @@
-﻿using ImageUploadDemo.models;
+﻿using ImageUploadDemo.Helpers;
+using ImageUploadDemo.ImageProcessProvider;
+using ImageUploadDemo.models;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +29,11 @@ namespace ImageUploadDemo
         {
             services.AddMvc();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            //services.AddTransient<IImageProvider, AzureBlobProvider>();
+            services.AddTransient<IImageProvider, LocalFileProvider>();
+            services.AddSingleton<IResizer, GoogleCDNImageResizehelper>();
+            services.AddSingleton<IFileSystemHelper, FileSystemHelper>();
+            services.AddSingleton<IHttpFactory, HttpFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
